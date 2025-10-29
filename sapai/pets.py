@@ -933,7 +933,7 @@ empty_ability = {
         "team": "none",
         "amount": "none",
         "status": "none",
-        "to": {"kind": "none", "n": "none"},
+        "target": {"kind": "none", "n": "none"},
         "copyAttack": "none",
         "copyHealth": "none",
         "from": {"kind": "none", "n": "none"},
