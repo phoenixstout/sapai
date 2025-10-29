@@ -56,7 +56,7 @@ def get_effect_function(effect_kind):
     elif isinstance(effect_kind, sapai.TeamSlot):
         effect_kind = effect_kind.pet.ability["effect"]["kind"]
     elif type(effect_kind) == str:
-        pass
+        raise Exception("effect_kind cannot be string")
     else:
         raise Exception(f"Unrecognized input {effect_kind}")
     if effect_kind not in func_dict:
@@ -95,7 +95,9 @@ def get_teams(pet_idx, teams):
         fteam = teams[1]
         oteam = teams[0]
     else:
-        raise Exception("That's impossible")
+        raise Exception(
+            f"pet_idx[0] must denote which team the pet is on (0 or 1). Got {pet_idx[0]}"
+        )
     return fteam, oteam
 
 
@@ -139,13 +141,8 @@ def get_target(
     if len(teams) == 1:
         teams = [teams[0], []]
 
-    ### Logic switch because data-dictionary is not consistent
     if "target" not in effect:
-        if "to" in effect:
-            target = effect["to"]
-        else:
-            print(apet, apet_idx, teams, te, fixed_targets, get_from)
-            raise Exception("Target not found")
+        raise Exception("Target not found")
     else:
         target = effect["target"]
 
@@ -156,7 +153,7 @@ def get_target(
             target = effect["from"]
 
     if type(target) != dict:
-        raise Exception("This should not be possible")
+        raise Exception(f"target needs to be of type dict. Got {type(target)}")
     kind = target["kind"]
     if "n" in target:
         n = target["n"]
@@ -173,7 +170,9 @@ def get_target(
         fteam = teams[1]
         oteam = teams[0]
     else:
-        raise Exception("That's impossible")
+        raise Exception(
+            f"apet_idx[0] must denote which team the activating pet is on (0 or 1). Got {apet_idx[0]}"
+        )
 
     ### Get possible indices for each team
     fidx = []
@@ -556,13 +555,15 @@ def DealDamage(apet, apet_idx, teams, te=None, te_idx=None, fixed_targets=None):
                 apet.attack * health_amount["attackDamagePercent"] * 0.01
             )
         else:
-            raise Exception()
+            raise Exception(
+                f"Activating pet effect needs 'amount' key. This may be acting buggy for non percentage attacks."
+            )
     for target_pet in target:
         if target_pet.status == "status-melon-armor":
-            health_amount = max(0, health_amount - 20)
+            health_amount = max(0, health_amount - 20)  # TODO - fix magic number
             target_pet.status = "none"
         elif target_pet.status == "status-garlic-armor":
-            health_amount = max(1, health_amount - 2)
+            health_amount = max(1, health_amount - 2)  # TODO - fix magic number
         elif target_pet.status == "status-coconut-shield":
             health_amount = 0
             target_pet.status = "none"
@@ -1017,7 +1018,7 @@ def Swallow(apet, apet_idx, teams, te=None, te_idx=None, fixed_targets=None):
         level_attack = 5
         level_health = 5
     else:
-        raise Exception()
+        raise Exception(f"output_level must be 1,2, or 3. Got {output_level}")
 
     # if apet.name != "pet-whale":
     #     raise Exception("Swallow only done by whale")
@@ -1095,7 +1096,7 @@ def TransferStats(apet, apet_idx, teams, te=None, te_idx=None, fixed_targets=Non
             if copy_attack:
                 entry._attack += max(int(apet.attack * percentage), 1)
             if copy_health:
-                raise Exception("This should not be possible")
+                raise Exception("copy_health implementation not added")
         else:
             temp_from = get_target(apet, apet_idx, teams, te=te, get_from=True)
             ### Randomness not needed as outcome will be the same for all pets
