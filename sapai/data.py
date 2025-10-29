@@ -7140,7 +7140,7 @@ data = {
             ],
         },
         # Tier 5
-        "pet-armadillo": {  # TODO - implement effect
+        "pet-armadillo": {  # TODO - test if effect works
             "name": "Armadillo",
             "id": "pet-armadillo",
             "image": {
@@ -7156,19 +7156,31 @@ data = {
                 "description": "Start Battle: Give ALL pets +8 Health",
                 "trigger": "StartOfBattle",
                 "triggeredBy": {"kind": "Self"},
-                "effect": {},
+                "effect": {
+                    "kind": "ModifyStats",
+                    "target": {"kind": "All"},
+                    "healthAmount": 8,
+                },
             },
             "level2Ability": {
                 "description": "Start Battle: Give ALL pets +16 Health",
                 "trigger": "StartOfBattle",
                 "triggeredBy": {"kind": "Self"},
-                "effect": {},
+                "effect": {
+                    "kind": "ModifyStats",
+                    "target": {"kind": "All"},
+                    "healthAmount": 16,
+                },
             },
             "level3Ability": {
                 "description": "Start Battle: Give ALL pets +24 Health",
                 "trigger": "StartOfBattle",
                 "triggeredBy": {"kind": "Self"},
-                "effect": {},
+                "effect": {
+                    "kind": "ModifyStats",
+                    "target": {"kind": "All"},
+                    "healthAmount": 24,
+                },
             },
             "probabilities": [
                 {
@@ -7954,7 +7966,7 @@ data = {
                 },
             ],
         },
-        "pet-scorpion": {  # TODO check poison-attack status one shots
+        "pet-scorpion": {
             "name": "Scorpion",
             "id": "pet-scorpion",
             "image": {
@@ -9199,7 +9211,10 @@ data = {
                 "description": "4 friends hurt: remove 3 health from all enemies",
                 "trigger": "",
                 # "triggeredBy": {"kind": "FriendAhead", "n": 1},
-                "effect": {},
+                "effect": {
+                    "kind": "ModifyStats",
+                    "target": {"kind": "EachEnemy"},
+                },
             },
             "level2Ability": {
                 "description": "4 friends hurt: remove 6 health from all enemies",
