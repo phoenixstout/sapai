@@ -435,6 +435,7 @@ class Shop(SAPList):
     def append(self, obj):
         """
         Append should be used when adding an animal from a levelup
+        Or for adding a food item for abilities such as Worm
         """
         if len(self.slots) >= self.max_slots:
             ### Max slots already reached so cannot be added

@@ -40,7 +40,7 @@ This module implements all effects in the game. API description is as follows:
     Returns
     -------
     targets: list
-        List of pets that have been targeted by the effect of the ability
+        List of pets or shop slots that have been targeted by the effect of the ability
     possible: list of lists
         List of lists of all possible targets that could also be targeted. 
         If there is an element of randomness in the outcome, all possible 
@@ -844,6 +844,27 @@ def RespawnPet(apet, apet_idx, teams, te=None, te_idx=None, fixed_targets=None):
     return target, [target]
 
 
+def StockShop(apet, apet_idx, teams, te=None, te_idx=None, fixed_targets=None):
+    """
+    Stock shop effect only implemented for worm
+    """
+    te_idx = te_idx or []
+    fixed_targets = fixed_targets or []
+
+    if apet.name != "pet-worm":
+        raise Exception("Only worm implemented for RefillShops")
+
+    shop = apet.shop
+    targets = []
+
+    food = apet.ability["effect"]["food"]
+    food_to_stock = Food(food)
+    food_to_stock.cost = apet.ability["effect"]["cost"]
+
+    shop.append(food_to_stock)
+    return targets, [targets]  # both empty
+
+
 def SummonPet(apet, apet_idx, teams, te=None, te_idx=None, fixed_targets=None):
     """ """
     # print("CALLED SUMMON")
@@ -1142,6 +1163,7 @@ def none(apet, apet_idx, teams, te=None, te_idx=None, fixed_targets=None):
     return [], []
 
 
+# Should refactor this at some point
 curr = sys.modules[__name__]
 mem = inspect.getmembers(curr, inspect.isfunction)
 func_dict = {}

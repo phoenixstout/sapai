@@ -3712,11 +3712,10 @@ data = {
                 "trigger": "StartOfTurn",
                 "triggeredBy": {"kind": "Player"},
                 "effect": {
-                    # "kind": "ModifyStats", TODO - implement StockShop effect in effects.py (similar to refillshops)
-                    # "attackAmount": 1,
-                    # "healthAmount": 1,
-                    # "target": {"kind": "Self"},
-                    # "untilEndOfBattle": False,
+                    "kind": "StockShop",
+                    "shop": "Food",  # Not sure what this is for but it is in RefillShop for cow
+                    "food": "food-apple",
+                    "cost": 2,
                 },
             },
             "level2Ability": {
@@ -3724,7 +3723,10 @@ data = {
                 "trigger": "StartOfTurn",
                 "triggeredBy": {"kind": "Player"},
                 "effect": {
-                    # TODO
+                    "kind": "StockShop",
+                    "shop": "Food",  # Not sure what this is for but it is in RefillShop for cow
+                    "food": "food-better-apple",
+                    "cost": 2,
                 },
             },
             "level3Ability": {
@@ -3732,7 +3734,10 @@ data = {
                 "trigger": "StartOfTurn",
                 "triggeredBy": {"kind": "Player"},
                 "effect": {
-                    # TODO
+                    "kind": "StockShop",
+                    "shop": "Food",  # Not sure what this is for but it is in RefillShop for cow
+                    "food": "food-best-apple",
+                    "cost": 2,
                 },
             },
             "probabilities": [
@@ -10689,6 +10694,56 @@ data = {
                 },
             },
         },
+        "food-better-apple": {
+            "name": "Better Apple",
+            "id": "food-better-apple",
+            "notes": "Stocked by Worm",
+            "image": {
+                "source": "",
+                "commit": "",
+                "unicodeCodePoint": "",
+            },
+            "tier": "Summoned",
+            "packs": ["StandardPack"],
+            "cost": 2,
+            "ability": {
+                "description": "Give an animal +2/+2.",
+                "triggeredBy": {"kind": "Self"},
+                "trigger": "Buy",
+                "effect": {
+                    "kind": "ModifyStats",
+                    "target": {"kind": "PurchaseTarget"},
+                    "attackAmount": 2,
+                    "healthAmount": 2,
+                    "untilEndOfBattle": False,
+                },
+            },
+        },
+        "food-best-apple": {
+            "name": "Best Apple",
+            "id": "food-best-apple",
+            "notes": "Stocked by Worm",
+            "image": {
+                "source": "",
+                "commit": "",
+                "unicodeCodePoint": "",
+            },
+            "tier": "Summoned",
+            "packs": ["StandardPack"],
+            "cost": 2,
+            "ability": {
+                "description": "Give an animal +3/+3.",
+                "triggeredBy": {"kind": "Self"},
+                "trigger": "Buy",
+                "effect": {
+                    "kind": "ModifyStats",
+                    "target": {"kind": "PurchaseTarget"},
+                    "attackAmount": 3,
+                    "healthAmount": 3,
+                    "untilEndOfBattle": False,
+                },
+            },
+        },
     },
     "statuses": {
         "status-weak": {
@@ -11010,10 +11065,11 @@ def get_fields(d):
 
 def add_dummy_fields(fields, d):
     if d == "none":
-        ### Sometimes there are dict or int datatype collisions in the give
+        ### Sometimes there are dict or int datatype collisions in the given
         ### json information. This should probably be corrected.
         return
-
+    if not fields or len(fields) == 0:
+        return  # Exit early if fields is empty
     if type(fields[0]) == str:
         if len(fields) == 1:
             ### Break recursion condition
