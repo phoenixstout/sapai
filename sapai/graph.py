@@ -43,8 +43,8 @@ def html_table(
         for iter_idx, temp_entry in enumerate(cell_bg_colors):
             temp_length = len(temp_entry)
             temp_check_length = len(entries[iter_idx])
-            if temp_length != 0:
-                raise NotImplementedError
+            if temp_length == 0:  # Skip validation if no colors specified
+                continue
             if temp_length != temp_check_length:
                 raise Exception("Must supply one cell_bg_color for every entry")
 
@@ -99,9 +99,9 @@ def prep_pet_str(pstr):
     if len(temp_pstr_list) == 2:
         temp_stats = temp_pstr_list[1]
         replace_index = temp_stats.index("-")
-        temp_pstr_list[
-            1
-        ] = f"{temp_stats[0:replace_index]},{temp_stats[replace_index + 1 :]}"
+        temp_pstr_list[1] = (
+            f"{temp_stats[0:replace_index]},{temp_stats[replace_index + 1 :]}"
+        )
         temp_pstr = " ".join(temp_pstr_list)
     return temp_pstr
 
